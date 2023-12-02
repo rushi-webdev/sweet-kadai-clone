@@ -12,20 +12,9 @@ app.use(cors());
 mongoose.set('strictQuery', false);
 app.use(express.json({ extended: false }));
 
-// const ConnectDB=async()=>{
-//     try {
-//         await mongoose.connect(process.env.DB_URL)
-//         console.log("connect DB")
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-// ConnectDB();
-
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to MongoDB');
-    // Your application logic here
   })
   .catch(error => {
     console.error('Error connecting to MongoDB:', error);
