@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dbConnect=require('./config/db');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const secretKey = process.env.JWT_SECRET_KEY;
@@ -13,8 +12,6 @@ app.use(cors());
 mongoose.set('strictQuery', false);
 app.use(express.json({ extended: false }));
 
-// mongoose.connect("mongodb://127.0.0.1:27017/auth");
-dbConnect();
 const dbConnect = () => {
     mongoose.connect(process.env.DB_URL);
 
@@ -32,6 +29,7 @@ const dbConnect = () => {
         console.log('MongoDB disconnected');
     });
 }
+dbConnect();
 const productRouter = require('./routes/productRoute');
 const orderRouter = require('./routes/orderRoute');
 const addressRoute = require('./routes/addressRoute');
