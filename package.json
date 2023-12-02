@@ -101,6 +101,7 @@
     "node-addon-api": "^3.2.1",
     "node-fetch": "^2.6.5",
     "nodemailer": "^6.9.7",
+    "nodemon": "^3.0.2",
     "nopt": "^5.0.0",
     "npmlog": "^5.0.1",
     "object-assign": "^4.1.1",
@@ -159,7 +160,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
-    "build":"npm i"
+    "build": "npm i"
   },
   "keywords": [],
   "author": "",
