@@ -15,6 +15,23 @@ app.use(express.json({ extended: false }));
 
 // mongoose.connect("mongodb://127.0.0.1:27017/auth");
 dbConnect();
+const dbConnect = () => {
+    mongoose.connect(process.env.DB_URL);
+
+    const db = mongoose.connection;
+
+    db.on('error', (err) => {
+        console.error('MongoDB connection error:', err);
+    });
+
+    db.once('open', () => {
+        console.log('Connected to MongoDB');
+    });
+
+    db.on('disconnected', () => {
+        console.log('MongoDB disconnected');
+    });
+}
 const productRouter = require('./routes/productRoute');
 const orderRouter = require('./routes/orderRoute');
 const addressRoute = require('./routes/addressRoute');
