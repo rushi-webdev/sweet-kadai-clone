@@ -12,30 +12,21 @@ app.use(cors());
 mongoose.set('strictQuery', false);
 app.use(express.json({ extended: false }));
 
-const dbConnect = () => {
-    mongoose.connect(process.env.DB_URL);
-
-    const db = mongoose.connection;
-
-    db.on('error', (err) => {
-        console.error('MongoDB connection error:', err);
-    });
-
-    db.once('open', () => {
-        console.log('Connected to MongoDB');
-    });
-
-    db.on('disconnected', () => {
-        console.log('MongoDB disconnected');
-    });
+const ConnectDB=async()=>{
+    try {
+        await mongoose.connect(process.env.DB_URL)
+        console.log("connect DB")
+    } catch (error) {
+        console.log(error)
+    }
 }
-dbConnect();
+ConnectDB();
 const productRouter = require('./routes/productRoute');
 const orderRouter = require('./routes/orderRoute');
 const addressRoute = require('./routes/addressRoute');
 const userRoute = require('./routes/userRoute');
-const paymentRoute=require('./routes/paymentRoute');
-const categoryRoute=require('./routes/categoryRoute');
+const paymentRoute = require('./routes/paymentRoute');
+const categoryRoute = require('./routes/categoryRoute');
 function verifyToken(req, res, next) {
     const token = req.headers.authorization;
 
@@ -59,12 +50,12 @@ app.get('/protected', verifyToken, (req, res) => {
 // app.get("/api/getkey", (req, res) =>
 //   res.status(200).json({ key: "rzp_test_foKvrZE621faky" })
 // );
-app.use('/',upload.array('images') ,productRouter);
+app.use('/', upload.array('images'), productRouter);
 app.use('/', orderRouter);
 app.use('/', addressRoute);
 app.use('/', userRoute);
 app.use('/', categoryRoute);
-app.use('/api/payment/',paymentRoute);
+app.use('/api/payment/', paymentRoute);
 app.listen(process.env.PORT, () => {
     console.log("running on 5000")
 })
