@@ -14,7 +14,9 @@ app.use(express.json({ extended: false }));
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    console.log('Connected to MongoDB');
+    app.listen(process.env.PORT, () => {
+      console.log("running on 5000")
+  })
   })
   .catch(error => {
     console.error('Error connecting to MongoDB:', error);
@@ -54,6 +56,3 @@ app.use('/', addressRoute);
 app.use('/', userRoute);
 app.use('/', categoryRoute);
 app.use('/api/payment/', paymentRoute);
-app.listen(process.env.PORT, () => {
-    console.log("running on 5000")
-})
