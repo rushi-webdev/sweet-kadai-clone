@@ -4,8 +4,17 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const {CloudinaryStorage} = require('multer-storage-cloudinary');
+const storage =new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'uploads/', // specify a folder in your Cloudinary account
+    format: async (req, file) => 'png', // or use a function to determine the format dynamically
+  },
+});
+const upload = multer({ storage: storage });
 const secretKey = process.env.JWT_SECRET_KEY;
 app.use(express.json());
 app.use(cors());

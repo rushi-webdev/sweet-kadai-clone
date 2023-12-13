@@ -2,7 +2,8 @@ const express = require('express');
 const Product = require('../models/productModel');
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
-const fs=require('fs');
+const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 require('dotenv').config();
 
 cloudinary.config({
@@ -10,7 +11,14 @@ cloudinary.config({
     api_key: process.env.CLOUD_API_KEY,
     api_secret: process.env.CLOUD_API_SECRET
 });
-const upload = multer({ dest: 'uploads/' });
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'uploads/', // specify a folder in your Cloudinary account
+        format: async (req, file) => 'png', // or use a function to determine the format dynamically
+    },
+});
+const upload = multer({ storage: storage });
 // app.use(upload.array('images'));
 
 const getAllProducts = async (req, res) => {
@@ -33,27 +41,27 @@ const getProductById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
-}; 
+};
 
-const searchProduct=async(req,res)=>{
+const searchProduct = async (req, res) => {
     const { query } = req.query;
     try {
         const results = await Product.find({
             $or: [
-              { name: { $regex: query, $options: 'i' } },
+                { name: { $regex: query, $options: 'i' } },
             ],
         })
         res.json(results);
-      } catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
-      }
+    }
 }
 
 // Create a new product
 const createProduct = (upload.array('images'), async (req, res) => {
     try {
-        const { name, description, price,category,slug,type } = req.body;
+        const { name, description, price, category, slug, type } = req.body;
         const imageUrls = [];
         console.log(type)
         // Upload images to Cloudinary
@@ -72,16 +80,16 @@ const createProduct = (upload.array('images'), async (req, res) => {
             images: imageUrls,
             category,
             slug,
-            product_type:type,
+            product_type: type,
         });
 
         // Save the product to the database
         const savedProduct = await newProduct.save();
-        
+
         req.files.forEach((file) => {
             fs.unlinkSync(file.path);
         });
- 
+
         res.status(201).json(savedProduct);
     } catch (error) {
         console.error('Error creating product:', error);
