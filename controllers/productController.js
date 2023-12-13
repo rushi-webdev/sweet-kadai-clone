@@ -53,8 +53,9 @@ const searchProduct=async(req,res)=>{
 // Create a new product
 const createProduct = (upload.array('images'), async (req, res) => {
     try {
-        const { name, description, price,category,slug } = req.body;
+        const { name, description, price,category,slug,type } = req.body;
         const imageUrls = [];
+        console.log(type)
         // Upload images to Cloudinary
         const promises = req.files.map(async (file) => {
             const result = await cloudinary.uploader.upload(file.path);
@@ -70,7 +71,8 @@ const createProduct = (upload.array('images'), async (req, res) => {
             price,
             images: imageUrls,
             category,
-            slug
+            slug,
+            product_type:type,
         });
 
         // Save the product to the database

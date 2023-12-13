@@ -24,18 +24,10 @@ const productSchema = new mongoose.Schema({
         ref: 'Category',
         required: true,
     },
-    // product_type:{
-    //     type:String, 
-    //     required:true
-    // },
-    // ingridients:{
-    //     type:String,
-    //     required:true
-    // },
-    // life:{
-    //     type:String,
-    //     required:true
-    // } 
+    product_type:{
+        type:String, 
+        required:true
+    }
 }, { timestamps: true });
 
 productSchema.index({ '$**': 'text' });
